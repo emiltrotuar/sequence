@@ -13,21 +13,21 @@ describe 'Sequence' do
   let(:car) { Car.new }
 
   it 'responds to dynamically created methods' do
-    car.should respond_to(:gear)
-    car.should respond_to(:next_gear)
+    expect(car).to respond_to(:gear)
+    expect(car).to respond_to(:next_gear)
   end
 
   it 'iterates through sequence' do
-    car.gear.should eq :first
-    car.next_gear.should eq :second
-    car.gear.should eq :second
-    car.gear = :fourth
-    car.gear.should eq :second
+    expect(car.gear).to eq :first
+    expect(car.next_gear).to eq :second
+    expect(car.gear).to eq :second
+    expect(car.send(:gear=, :fourth)).to eq false
+    expect(car.gear).to eq :second
 
     car.gear = :third
-    car.gear.should eq :third
+    expect(car.gear).to eq :third
 
-    car.next_gear.should eq :fourth
-    car.next_gear.should eq 'iteration reached an end'
+    expect(car.next_gear).to eq :fourth
+    expect(car.next_gear).to eq 'iteration reached an end'
   end
 end

@@ -1,3 +1,4 @@
+```ruby
 class Car
   include Sequence
  
@@ -14,3 +15,4 @@ car.gear # => :second
  
 car.gear = :third # => :third
 car.gear # => :third
+```

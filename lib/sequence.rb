@@ -22,7 +22,7 @@ module Sequence
 
       define_method("#{item}=") do |item|
         item_index = validate_item(item)
-        return unless item_index
+        return false unless item_index
         @current_index = item_index
         array_of_items[current_index]
       end
@@ -64,10 +64,8 @@ module Sequence
           item_index = check_index(item)
         rescue ArgumentError => e
           puts e
-          false
-        rescue Exception => e
-          puts e
-          false
+        rescue Exception
+          return
         end
       end
 
@@ -83,7 +81,7 @@ module Sequence
         if !item_index
           raise Exception, 'sequence not contain such item'
         elsif item_index >= current_index+2
-          raise Exception, 'this is not the next item'
+          raise Exception
         end
         item_index
       end
