@@ -1,92 +1,92 @@
 require "sequence/version"
 
 module Sequence
-  instance_eval %{
+
+  def self.included(base)
+    base.extend(ClassMethods)
+  end
+  
+  module ClassMethods
     def sequence(item, array_of_items)
-      attr_accessor :current_item, :array_of_items
-      
-      item = item.to_
-      @array_of_items = array_of_items
-      @current_item   = 0
 
-      define_method(item.to_s) do
-        array_of_items[current_item]
+      define_method("initialize") do
+        @current_index = 0
+        @array_of_items = array_of_items
+        validate_array(array_of_items)
+        self.singleton_class.send(:attr_reader, :array_of_items, :current_index)
       end
 
-      define_method('next'+item.to.s) do
-        current_item += 1
-        array_of_items[current_item]
+      define_method(item) do
+        array_of_items[current_index]
       end
-    end
-  }
 
-  class Example
-    # include Sequence
-
-    # sequence :item, [:first, :second, :third, :fourth]
-
-    attr_accessor :current_index, :array_of_items
-
-    def initialize
-      @array_of_items = [:first, :second, :third, :fourth]
-      validate_array(array_of_items)
-      @current_index = 0
-    end
-
-    def item
-      binding.pry
-      array_of_items[current_index]
-    end
-
-    def item=(item)
-      item = validate_item(item)
-      return unless item
-      item_index = check_index(item)
-      return unless item_index
-      current_index = item_index
-      array_of_items[current_index]
-    end
-
-    def next_item
-      binding.pry
-      current_index = current_index + 1
-      item
-    end
-
-    private
-
-    def validate_array(array)
-      begin
-        array = check_array(array)
-      rescue ArgumentError => e
-        puts e
-        return false
+      define_method("#{item}=") do |item|
+        item_index = validate_item(item)
+        return unless item_index
+        @current_index = item_index
+        array_of_items[current_index]
       end
-    end
 
-    def check_array(array)
-      array.each do |array_item|
-        unless array_item.is_a? Symbol
-          raise ArgumentError, 'array should only consists of symbols'
+      define_method("next_#{item}") do
+        res = validate_iteration
+        return res if res
+        @current_index += 1
+        self.send(item)
+      end
+
+      define_method('validate_iteration') do
+        if current_index >= array_of_items.size-1
+          'iteration reached an end'
         end
       end
-      array
-    end
 
-    def validate_item(item)
-      begin
-        raise ArgumentError, 'assigned value should be a symbol' unless item.is_a? Symbol
-      rescue ArgumentError => e
-        puts e
-        return nil
+      define_method('validate_array') do |array|
+        begin
+          array = check_array_content(array)
+        rescue ArgumentError => e
+          puts e
+          return false
+        end
       end
-      item
-    end
 
-    def check_index(item)
-      item_index = array_of_items.index(item)
-      return false if !item_index || (item_index >= current_index+2)
-      item_index
+      define_method('check_array_content') do |array|
+        array.each do |array_item|
+          unless array_item.is_a? Symbol
+            raise ArgumentError, 'array should only consists of symbols'
+          end
+        end
+        array
+      end
+
+      define_method('validate_item') do |item|
+        begin
+          item       = check_type(item)
+          item_index = check_index(item)
+        rescue ArgumentError => e
+          puts e
+          false
+        rescue Exception => e
+          puts e
+          false
+        end
+      end
+
+      define_method('check_type') do |item|
+        unless item.is_a? Symbol
+          raise ArgumentError, 'assigned value should be a symbol'
+        end
+        item
+      end
+
+      define_method('check_index') do |item|
+        item_index = array_of_items.index(item)
+        if !item_index
+          raise Exception, 'sequence not contain such item'
+        elsif item_index >= current_index+2
+          raise Exception, 'this is not the next item'
+        end
+        item_index
+      end
     end
   end
 end

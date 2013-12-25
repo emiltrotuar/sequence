@@ -1,35 +1,33 @@
 require 'spec_helper'
 require 'sequence'
+require 'pry'
 
-class Foo
+class Car
   include Sequence
 
-  sequence :item, [:first, :second, :third, :fourth]
+  sequence :gear, [:first, :second, :third, :fourth]
 end
 
 describe 'Sequence' do
 
-  before do	
-    foo = Foo.new
+  let(:car) { Car.new }
+
+  it 'responds to dynamically created methods' do
+    car.should respond_to(:gear)
+    car.should respond_to(:next_gear)
   end
 
-  it 'responds to new methods' do
-    foo.should respond_to(item)
-    foo.should respond_to(next_item)
-  end
+  it 'iterates through sequence' do
+    car.gear.should eq :first
+    car.next_gear.should eq :second
+    car.gear.should eq :second
+    car.gear = :fourth
+    car.gear.should eq :second
 
-  it 'adds iterates through' do
-    foo.item.should eq :first
-    foo.next_item.should eq :second
-    foo.should_receive(:item=).with(:forth).and_return('false')
-    foo.item = :fourth
-    foo.item.should eq :second
+    car.gear = :third
+    car.gear.should eq :third
 
-    foo.should_receive(:item=).with(:third).and_return(:third)
-    foo.item = :third
-    foo.item.should eq :third
-
-    foo.next_item.should eq :forth
-    expect {foo.next_item}.to raise_error('iteration reached an end')
+    car.next_gear.should eq :fourth
+    car.next_gear.should eq 'iteration reached an end'
   end
 end
