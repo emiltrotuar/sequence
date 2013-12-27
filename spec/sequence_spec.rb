@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'sequence'
-require 'pry'
 
 class Car
   include Sequence

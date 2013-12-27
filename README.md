@@ -1,3 +1,16 @@
+## Installation
+
+```ruby
+gem specific_install -l https://github.com/emiltrotuar/sequence.git
+```
+or add the following line in Gemfile:
+```ruby
+gem 'sequence', git: 'https://github.com/emiltrotuar/sequence.git'
+```
+and run `bundle`
+
+## Usage
+
 ```ruby
 class Car
   include Sequence
