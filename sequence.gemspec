@@ -6,9 +6,12 @@ require 'sequence/version'
 Gem::Specification.new do |spec|
   spec.name          = "sequence"
   spec.version       = Sequence::VERSION
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.authors       = ["dimas"]
+  spec.email         = ["cartobus@gmail.com"]
+  spec.description   = %q{generates a bunch of methods for 
+                          class to make it act like sequence}
+  spec.summary       = %q{sequence behavior generator}
+  spec.homepage      = "https://github.com/emiltrotuar/sequence"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
