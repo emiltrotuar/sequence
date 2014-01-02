@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'sequence'
+require 'pry'
 
 class Car
   include Sequence
@@ -32,6 +33,7 @@ describe 'Sequence' do
     end
 
     it "assigns value if it's next to current and returns it" do
+      # binding.pry
       @car.gear = :third
       expect(@car.gear).to eq :third
     end
@@ -48,27 +50,6 @@ describe 'Sequence' do
       car.next_gear
       car.next_gear
       expect(car.next_gear).to eq false
-    end
-  end
-
-  context 'validation errors' do
-    it 'validates an array' do
-      array = [:first, :second, 'third', 4]
-      expect do 
-        car.validate_array(array)
-      end.to raise_error('array should only consists of symbols')
-    end
-
-    it 'assings a values of proper type' do
-      expect do 
-        car.check_type('first')
-      end.to raise_error('assigned value should be a symbol')
-    end
-
-    it 'checks if item belongs to array' do
-      expect do 
-        car.check_index(:fifth)
-      end.to raise_error('wrong assignment')
     end
   end
 end

@@ -1,7 +1,9 @@
 module Sequence
   class Validator
-    def initialize()
-      array
+    attr_reader :array, :current_item_index
+
+    def initialize(array_of_items)
+      @array = array_of_items
     end
 
     def validate_iteration(current_item_index)
@@ -18,23 +20,23 @@ module Sequence
       end
     end
 
-    def check_item(item)
+    def check_item(item,current_item_index)
       check_type(item)
-      check_index(item)
+      check_index(item,current_item_index)
     end
 
-    define_method('check_type') do |item|
+    def check_type(item) 
       unless item.is_a? Symbol
         raise 'assigned value should be a symbol'
       end
     end
 
-    define_method('check_index') do |item|
+    def check_index(item,current_item_index)
       item_index = array.index(item)
       if !item_index || item_index >= current_item_index+2
         raise 'wrong assignment'
       end
-      @current_item_index = item_index
+      current_item_index = item_index
     end
   end
 end
