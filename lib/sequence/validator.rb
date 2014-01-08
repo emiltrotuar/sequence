@@ -1,6 +1,6 @@
 module Sequence
   class Validator
-    attr_reader :array, :current_item_index
+    attr_reader :array
 
     def initialize(array_of_items)
       @array = array_of_items
@@ -15,7 +15,7 @@ module Sequence
     def validate_array
       array.each do |array_item|
         unless array_item.is_a? Symbol
-          raise ArgumentError, 'array should only consists of symbols'
+          raise 'array should only consists of symbols'
         end
       end
     end

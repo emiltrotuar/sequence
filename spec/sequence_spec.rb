@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'sequence'
-require 'pry'
 
 class Car
   include Sequence
@@ -33,7 +32,6 @@ describe 'Sequence' do
     end
 
     it "assigns value if it's next to current and returns it" do
-      # binding.pry
       @car.gear = :third
       expect(@car.gear).to eq :third
     end
