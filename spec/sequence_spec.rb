@@ -18,6 +18,20 @@ describe 'Sequence' do
     expect(car).to respond_to(:array_of_items)
   end
 
+  context 'when more than one sequence' do
+    class Car
+      include Sequence
+
+      sequence :gear, [:first, :second, :third, :fourth]
+      sequence :lights, [:daytime, :short_range, :long_range]
+    end
+
+  end
+
+  context 'when constructor already exists in class' do
+    
+  end
+
   context 'get values from sequence' do
     before(:all) do
       @car = Car.new

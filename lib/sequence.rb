@@ -8,6 +8,14 @@ module Sequence
   end
 
   module ClassMethods
+    # def sequence(item, array_of_items)
+    #   instance_variable_set("@_#{item}_sequence", Sequence.new(array_of_items))
+    # end
+
+    # define_method(item) do
+    #   instance_variable_get("@_#{item}_sequence”).get_current
+    # end
+
     def sequence(item, array_of_items)
 
       define_method("initialize") do
