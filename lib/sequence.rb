@@ -1,5 +1,5 @@
 require "sequence/version"
-require "sequence/validator"
+require "sequence/sequence_class"
 
 module Sequence
 
@@ -8,43 +8,19 @@ module Sequence
   end
 
   module ClassMethods
-    # def sequence(item, array_of_items)
-    #   instance_variable_set("@_#{item}_sequence", Sequence.new(array_of_items))
-    # end
-
-    # define_method(item) do
-    #   instance_variable_get("@_#{item}_sequence”).get_current
-    # end
-
     def sequence(item, array_of_items)
-
-      define_method("initialize") do
-        @current_item_index = 0
-        @array_of_items = array_of_items
-        @validator = Validator.new(array_of_items)
-        @validator.validate_array
-        self.singleton_class.send(:attr_reader, :validator,
-                                                :array_of_items,
-                                                :current_item_index)
-      end
+      instance_variable_set("@_#{item}_sequence", SequenceClass.new(array_of_items))
 
       define_method(item) do
-        array_of_items[current_item_index]
+        self.class.instance_variable_get("@_#{item}_sequence").get_current_item
       end
 
       define_method("#{item}=") do |itm|
-        begin
-          @current_item_index = validator.check_item(itm, current_item_index)
-        rescue
-          return false
-        end
-        itm
+        self.class.instance_variable_get("@_#{item}_sequence").item_equals(itm)
       end
 
       define_method("next_#{item}") do
-        validator.validate_iteration(current_item_index) rescue return false
-        @current_item_index += 1
-        self.send(item)
+        self.class.instance_variable_get("@_#{item}_sequence").get_next_item
       end
     end
   end
