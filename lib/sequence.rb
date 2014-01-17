@@ -1,5 +1,5 @@
-require "sequence/version"
-require "sequence/sequence_class"
+require 'sequence/version'
+require 'sequence/sequence_class'
 
 module Sequence
 
@@ -8,6 +8,7 @@ module Sequence
   end
 
   module ClassMethods
+
     def sequence(item, array_of_items)
       instance_variable_set("@_#{item}_sequence", SequenceClass.new(array_of_items))
 
@@ -21,12 +22,12 @@ module Sequence
         self.class.sq(item).get_current_item
       end
 
-      define_method("#{item}=") do |itm|
-        self.class.sq(item).item_equals(itm)
-      end
-
       define_method("next_#{item}") do
         self.class.sq(item).get_next_item
+      end
+
+      define_method("#{item}=") do |itm|
+        self.class.sq(item).item_equals(itm)
       end
     end
 

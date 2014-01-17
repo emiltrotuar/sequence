@@ -1,35 +1,29 @@
-require 'spec_helper'
 require 'sequence/sequence_class'
 
 describe SequenceClass do
 
   before(:all) do
-    arr = [:jan, :feb, :mar, :apr]
-    @seq = SequenceClass.new(arr) 
+    items = [:first, :second, :third]
+    @seq = described_class.new(items) 
   end
 
-  it 'responds to methods' do
+  it 'responds to the methods' do
     expect(@seq).to respond_to(:get_current_item)
     expect(@seq).to respond_to(:get_next_item)
     expect(@seq).to respond_to(:item_equals)
   end
 
-  it 'returns first item' do
-    expect(@seq.get_current_item).to eq :jan
+  it 'returns the first item' do
+    expect(@seq.get_current_item).to eq :first
   end
 
-  it 'returns next item' do
-    expect(@seq.get_next_item).to eq :feb
-    expect(@seq.get_current_item).to eq :feb
+  it 'returns the next item' do
+    expect(@seq.get_next_item).to eq :second
+    expect(@seq.get_current_item).to eq :second
   end
 
-  it 'declines wrong item assignment' do
-    expect(@seq.send(:item_equals, :apr)).to eq false
-    expect(@seq.get_current_item).to eq :feb
-  end
-
-  it 'performs proper item assignment' do
-    expect(@seq.item_equals(:mar)).to eq :mar
-    expect(@seq.get_current_item).to eq :mar
+  it 'performs the item assignment' do
+    expect(@seq.item_equals(:third)).to eq :third
+    expect(@seq.get_current_item).to eq :third
   end
 end

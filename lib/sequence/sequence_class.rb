@@ -1,4 +1,4 @@
-require "sequence/validator"
+require 'sequence/validator'
 
 class SequenceClass
   attr_reader :validator, :array_of_items, :current_item_index
@@ -14,18 +14,14 @@ class SequenceClass
     array_of_items[current_item_index]
   end
 
-  def item_equals(itm)
-    begin
-      @current_item_index = validator.check_item(itm, current_item_index)
-      itm
-    rescue
-      return false
-    end
-  end
-
   def get_next_item
-    validator.validate_iteration(current_item_index) rescue return false
+    validator.validate_iteration(current_item_index)
     @current_item_index += 1
     get_current_item
+  end
+
+  def item_equals(itm)
+    @current_item_index = validator.validate_item(itm, current_item_index)
+    itm
   end
 end

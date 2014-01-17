@@ -1,42 +1,56 @@
-require 'spec_helper'
 require 'sequence/validator'
 
 describe Validator do
 
-  it 'validates an array' do
-    array = [:first, :second, 'third', 4]
-    validator = described_class.new(array)
+  let(:items)     { [:first, :second, :third] }
+
+  let(:validator) { described_class.new(items) }
+
+  it 'checks whether an array contains only symbols' do
+    items[0] = 'first'
     expect do 
       validator.validate_array
     end.to raise_error('array should only consists of symbols')
   end
 
-  it 'validates iteration' do
-    array_of_items = [:first, :second, :third, :fourth]
-    current_index = 3
-    validator = described_class.new(array_of_items)
+  it 'checks whether an iteration reached an end'  do
+    last_index_in_array = 2
     expect do 
-      validator.validate_iteration(current_index)
+      validator.validate_iteration(last_index_in_array)
     end.to raise_error('iteration reached an end')
   end
 
-  context 'check item' do
-    before do
-      array_of_items = [:first, :second, :third, :fourth]
-      @validator = described_class.new(array_of_items)
+  context 'when performs item validation' do
+
+    it 'defines the item index' do
+      expect(validator.item_index(items[0])).to eq 0
     end
 
-    it 'assings a values of proper type' do
+    it 'allows only the symbols' do
       expect do 
-        @validator.check_type('first')
-      end.to raise_error('assigned value should be a symbol')
+        validator.check_type('not_a_symbol')
+      end.to raise_error(ArgumentError,'assigned value should be a symbol')
     end
 
-    it 'checks if item belongs to array' do
-      FIRST_ITEM_INDEX = 0
+    it 'checks the presence in array' do
       expect do 
-        @validator.check_index(:third, FIRST_ITEM_INDEX)
-      end.to raise_error('wrong assignment')
+        validator.check_presence(:non_existent_element)
+      end.to raise_error(ArgumentError,'array not contain this element')
+    end
+
+    it 'declines the wrong item assignment' do
+      current_index = 0
+      item_index = current_index+2
+      expect do 
+        validator.check_index(current_index, item_index)
+      end.to raise_error ArgumentError,
+      <<-E
+      \n
+         assigned value should not be higher than the next to current value:
+         ===================================================================
+         current item index:   0
+         assigning item index: 2
+      E
     end
   end
 end
